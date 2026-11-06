@@ -1,0 +1,964 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HVTO Student Management System</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --bg: #f4f6fb;
+  --white: #ffffff;
+  --text: #172033;
+  --muted: #718096;
+  --border: #e5e9f2;
+  --green: #16a34a;
+  --red: #dc2626;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Noto Sans Khmer', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button, input, select {
+  font: inherit;
+}
+
+/* Layout */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #111827;
+  color: white;
+  padding: 25px 16px;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: 700;
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.logo span {
+  color: #60a5fa;
+}
+
+.logo-sub {
+  color: #9ca3af;
+  font-size: 11px;
+  padding: 0 12px;
+  margin-bottom: 35px;
+}
+
+.menu-label {
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 10px 12px;
+  text-transform: uppercase;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px;
+  margin: 5px 0;
+  border-radius: 8px;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: #26364f;
+  color: white;
+}
+
+.nav-icon {
+  font-size: 17px;
+  width: 22px;
+  text-align: center;
+}
+
+/* Main */
+.main {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  padding: 25px 32px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.topbar h2 {
+  font-size: 22px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.language-btn {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 9px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  background: #dbeafe;
+  color: var(--primary);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+.profile small {
+  color: var(--muted);
+  display: block;
+  margin-top: 3px;
+}
+
+/* Dashboard */
+.welcome {
+  margin-bottom: 25px;
+}
+
+.welcome h1 {
+  font-size: 25px;
+  margin-bottom: 7px;
+}
+
+.welcome p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: white;
+  padding: 21px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.stat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.stat-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+.blue { background: #dbeafe; }
+.green { background: #dcfce7; }
+.orange { background: #ffedd5; }
+.purple { background: #f3e8ff; }
+
+.stat-card p {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stat-card h2 {
+  font-size: 27px;
+  margin-top: 8px;
+}
+
+.stat-note {
+  font-size: 11px;
+  color: var(--green);
+  margin-top: 8px;
+}
+
+/* Content */
+.content-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 22px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.section-header h3 {
+  font-size: 17px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.search {
+  padding: 10px 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  width: 220px;
+}
+
+.search:focus,
+input:focus,
+select:focus {
+  border-color: var(--primary);
+}
+
+.btn {
+  border: none;
+  background: var(--primary);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.btn:hover {
+  background: var(--primary-dark);
+}
+
+.btn-light {
+  background: #eef2ff;
+  color: var(--primary);
+}
+
+.btn-light:hover {
+  background: #dbeafe;
+}
+
+/* Table */
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+th {
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 11px;
+  text-align: left;
+  padding: 14px 12px;
+  font-weight: 600;
+}
+
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #edf0f5;
+  font-size: 12px;
+}
+
+.student-name {
+  font-weight: 600;
+}
+
+.student-code {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.active-status {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.inactive-status {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Add Student Form */
+.form-panel {
+  display: none;
+}
+
+.form-panel.show {
+  display: block;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  background: white;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 11px;
+  padding: 20px;
+}
+
+/* Responsive */
+@media(max-width: 1000px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media(max-width: 700px) {
+  .sidebar {
+    width: 65px;
+    padding: 20px 7px;
+  }
+
+  .logo {
+    font-size: 0;
+    padding: 0 10px;
+  }
+
+  .logo::after {
+    content: "H";
+    font-size: 23px;
+    color: #60a5fa;
+  }
+
+  .logo-sub,
+  .menu-label,
+  .nav-text {
+    display: none;
+  }
+
+  .nav-link {
+    justify-content: center;
+    padding: 13px 5px;
+  }
+
+  .main {
+    margin-left: 65px;
+    width: calc(100% - 65px);
+    padding: 18px 12px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 14px;
+  }
+
+  .topbar h2 {
+    font-size: 16px;
+  }
+
+  .profile div:last-child {
+    display: none;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .search {
+    width: 100%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="logo">HVTO <span>SMS</span></div>
+    <div class="logo-sub">STUDENT MANAGEMENT SYSTEM</div>
+
+    <div class="menu-label" data-en="MENU" data-km="ម៉ឺនុយ">MENU</div>
+
+    <a class="nav-link active" onclick="showPage('dashboard', this)">
+      <span class="nav-icon">▦</span>
+      <span class="nav-text" data-en="Dashboard" data-km="ផ្ទាំងគ្រប់គ្រង">Dashboard</span>
+    </a>
+
+    <a class="nav-link" onclick="showPage('students', this)">
+      <span class="nav-icon">👨‍🎓</span>
+      <span class="nav-text" data-en="Students" data-km="សិស្ស">Students</span>
+    </a>
+
+    <a class="nav-link" onclick="showPage('teachers', this)">
+      <span class="nav-icon">👨‍🏫</span>
+      <span class="nav-text" data-en="Teachers" data-km="គ្រូបង្រៀន">Teachers</span>
+    </a>
+
+    <a class="nav-link" onclick="showPage('classes', this)">
+      <span class="nav-icon">🏫</span>
+      <span class="nav-text" data-en="Classes" data-km="ថ្នាក់រៀន">Classes</span>
+    </a>
+
+    <a class="nav-link" onclick="showPage('attendance', this)">
+      <span class="nav-icon">📋</span>
+      <span class="nav-text" data-en="Attendance" data-km="វត្តមាន">Attendance</span>
+    </a>
+
+    <a class="nav-link" onclick="showPage('grades', this)">
+      <span class="nav-icon">📊</span>
+      <span class="nav-text" data-en="Grades" data-km="ពិន្ទុ">Grades</span>
+    </a>
+
+    <div class="menu-label" data-en="SYSTEM" data-km="ប្រព័ន្ធ">SYSTEM</div>
+
+    <a class="nav-link" onclick="showPage('reports', this)">
+      <span class="nav-icon">📄</span>
+      <span class="nav-text" data-en="Reports" data-km="របាយការណ៍">Reports</span>
+    </a>
+
+    <a class="nav-link" onclick="showPage('settings', this)">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-text" data-en="Settings" data-km="ការកំណត់">Settings</span>
+    </a>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <header class="topbar">
+      <h2 data-en="HVTO Administration" data-km="ការគ្រប់គ្រង HVTO">
+        HVTO Administration
+      </h2>
+
+      <div class="topbar-right">
+        <button class="language-btn" onclick="toggleLanguage()" id="langBtn">
+          🇰🇭 Khmer
+        </button>
+
+        <div class="profile">
+          <div class="avatar">A</div>
+          <div>
+            <strong style="font-size:12px;">Administrator</strong>
+            <small>Super Admin</small>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- DASHBOARD PAGE -->
+    <section id="dashboardPage">
+
+      <div class="welcome">
+        <h1 data-en="Welcome back, Admin 👋" data-km="សូមស្វាគមន៍ Admin 👋">
+          Welcome back, Admin 👋
+        </h1>
+        <p data-en="Here is an overview of your school management system."
+           data-km="នេះជាទិដ្ឋភាពទូទៅនៃប្រព័ន្ធគ្រប់គ្រងសាលារៀនរបស់អ្នក។">
+          Here is an overview of your school management system.
+        </p>
+      </div>
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <p data-en="Total Students" data-km="សិស្សសរុប">Total Students</p>
+            <div class="stat-icon blue">👨‍🎓</div>
+          </div>
+          <h2 id="totalStudents">1,250</h2>
+          <div class="stat-note">↑ Student overview</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <p data-en="Total Teachers" data-km="គ្រូសរុប">Total Teachers</p>
+            <div class="stat-icon green">👨‍🏫</div>
+          </div>
+          <h2>48</h2>
+          <div class="stat-note">Active teachers</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <p data-en="Total Classes" data-km="ថ្នាក់សរុប">Total Classes</p>
+            <div class="stat-icon orange">🏫</div>
+          </div>
+          <h2>32</h2>
+          <div class="stat-note">Current classes</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <p data-en="Attendance Today" data-km="វត្តមានថ្ងៃនេះ">Attendance Today</p>
+            <div class="stat-icon purple">📋</div>
+          </div>
+          <h2>94%</h2>
+          <div class="stat-note">Today's attendance</div>
+        </div>
+
+      </div>
+
+      <div class="content-card">
+        <div class="section-header">
+          <h3 data-en="Recent Students" data-km="សិស្សថ្មីៗ">Recent Students</h3>
+          <button class="btn btn-light" onclick="showPage('students')">
+            <span data-en="View All →" data-km="មើលទាំងអស់ →">View All →</span>
+          </button>
+        </div>
+        <p style="font-size:12px;color:#718096;">
+          Select Students from the sidebar to manage student records.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- STUDENTS PAGE -->
+    <section id="studentsPage" style="display:none;">
+
+      <div class="welcome">
+        <h1 data-en="Student Management" data-km="ការគ្រប់គ្រងសិស្ស">
+          Student Management
+        </h1>
+        <p data-en="Manage student information and enrollment."
+           data-km="គ្រប់គ្រងព័ត៌មានសិស្ស និងការចុះឈ្មោះចូលរៀន។">
+          Manage student information and enrollment.
+        </p>
+      </div>
+
+      <!-- FORM -->
+      <div class="content-card form-panel" id="studentForm">
+        <div class="section-header">
+          <h3 data-en="Add New Student" data-km="បន្ថែមសិស្សថ្មី">
+            Add New Student
+          </h3>
+        </div>
+
+        <form id="addStudentForm">
+
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label data-en="Student Code" data-km="លេខកូដសិស្ស">Student Code</label>
+              <input id="studentCode" required placeholder="HVTO-2026-0001">
+            </div>
+
+            <div class="form-group">
+              <label data-en="Full Name" data-km="ឈ្មោះពេញ">Full Name</label>
+              <input id="studentName" required placeholder="Student Name">
+            </div>
+
+            <div class="form-group">
+              <label data-en="Gender" data-km="ភេទ">Gender</label>
+              <select id="studentGender" required>
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label data-en="Class" data-km="ថ្នាក់">Class</label>
+              <select id="studentClass" required>
+                <option value="">Select Class</option>
+                <option>Grade 7</option>
+                <option>Grade 8</option>
+                <option>Grade 9</option>
+                <option>Grade 10</option>
+                <option>Grade 11</option>
+                <option>Grade 12</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label data-en="Phone Number" data-km="លេខទូរស័ព្ទ">Phone Number</label>
+              <input id="studentPhone" placeholder="012 345 678">
+            </div>
+
+            <div class="form-group">
+              <label data-en="Enrollment Date" data-km="ថ្ងៃចុះឈ្មោះ">Enrollment Date</label>
+              <input id="studentDate" type="date" required>
+            </div>
+
+          </div>
+
+          <div class="form-footer">
+            <button type="button" class="btn btn-light" onclick="toggleForm(false)"
+              data-en="Cancel" data-km="បោះបង់">Cancel</button>
+
+            <button type="submit" class="btn"
+              data-en="Save Student" data-km="រក្សាទុកសិស្ស">Save Student</button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- STUDENT TABLE -->
+      <div class="content-card">
+
+        <div class="section-header">
+          <h3 data-en="All Students" data-km="សិស្សទាំងអស់">All Students</h3>
+
+          <div class="actions">
+            <input class="search" id="searchInput"
+              placeholder="Search students..." oninput="searchStudents()">
+
+            <button class="btn" onclick="toggleForm(true)">
+              + <span data-en="Add Student" data-km="បន្ថែមសិស្ស">Add Student</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>STUDENT</th>
+                <th>GENDER</th>
+                <th>CLASS</th>
+                <th>PHONE</th>
+                <th>ENROLLMENT DATE</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+
+            <tbody id="studentTable">
+
+              <tr>
+                <td>
+                  <div class="student-name">Dara Sok</div>
+                  <div class="student-code">HVTO-2026-0001</div>
+                </td>
+                <td>Male</td>
+                <td>Grade 10</td>
+                <td>012 345 678</td>
+                <td>01/11/2026</td>
+                <td><span class="status active-status">Active</span></td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="student-name">Srey Mom</div>
+                  <div class="student-code">HVTO-2026-0002</div>
+                </td>
+                <td>Female</td>
+                <td>Grade 9</td>
+                <td>098 765 432</td>
+                <td>02/11/2026</td>
+                <td><span class="status active-status">Active</span></td>
+              </tr>
+
+              <tr>
+                <td>
+                  <div class="student-name">Vannak Chea</div>
+                  <div class="student-code">HVTO-2026-0003</div>
+                </td>
+                <td>Male</td>
+                <td>Grade 12</td>
+                <td>096 123 456</td>
+                <td>03/11/2026</td>
+                <td><span class="status active-status">Active</span></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- PLACEHOLDER PAGES -->
+    <section id="placeholderPage" style="display:none;">
+      <div class="content-card">
+        <h3 id="placeholderTitle">Module</h3>
+        <p style="color:#718096;font-size:13px;margin-top:10px;">
+          This module is part of the HVTO system roadmap and is not implemented in this demo yet.
+        </p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      © 2026 HVTO Student Management System. All rights reserved.
+    </footer>
+
+  </main>
+
+</div>
+
+<script>
+let currentLanguage = 'en';
+
+const students = [
+  {
+    code: 'HVTO-2026-0001',
+    name: 'Dara Sok',
+    gender: 'Male',
+    className: 'Grade 10',
+    phone: '012 345 678',
+    date: '01/11/2026'
+  },
+  {
+    code: 'HVTO-2026-0002',
+    name: 'Srey Mom',
+    gender: 'Female',
+    className: 'Grade 9',
+    phone: '098 765 432',
+    date: '02/11/2026'
+  },
+  {
+    code: 'HVTO-2026-0003',
+    name: 'Vannak Chea',
+    gender: 'Male',
+    className: 'Grade 12',
+    phone: '096 123 456',
+    date: '03/11/2026'
+  }
+];
+
+function toggleLanguage() {
+  currentLanguage = currentLanguage === 'en' ? 'km' : 'en';
+
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + currentLanguage);
+  });
+
+  document.getElementById('langBtn').textContent =
+    currentLanguage === 'en' ? '🇰🇭 Khmer' : '🇬🇧 English';
+}
+
+function showPage(page, element) {
+  document.getElementById('dashboardPage').style.display = 'none';
+  document.getElementById('studentsPage').style.display = 'none';
+  document.getElementById('placeholderPage').style.display = 'none';
+
+  if (page === 'dashboard') {
+    document.getElementById('dashboardPage').style.display = 'block';
+  } else if (page === 'students') {
+    document.getElementById('studentsPage').style.display = 'block';
+  } else {
+    document.getElementById('placeholderPage').style.display = 'block';
+
+    const titles = {
+      teachers: 'Teacher Management',
+      classes: 'Class Management',
+      attendance: 'Attendance Management',
+      grades: 'Grades Management',
+      reports: 'Reports',
+      settings: 'System Settings'
+    };
+
+    document.getElementById('placeholderTitle').textContent =
+      titles[page] || 'Module';
+  }
+
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+  });
+
+  if (element) element.classList.add('active');
+}
+
+function toggleForm(show) {
+  document.getElementById('studentForm').classList.toggle('show', show);
+}
+
+function renderStudents(list = students) {
+  const table = document.getElementById('studentTable');
+
+  table.innerHTML = '';
+
+  list.forEach(student => {
+    const row = document.createElement('tr');
+
+    [
+      student.name,
+      student.code,
+      student.gender,
+      student.className,
+      student.phone,
+      student.date
+    ].forEach(() => {});
+
+    const nameCell = document.createElement('td');
+    const name = document.createElement('div');
+    name.className = 'student-name';
+    name.textContent = student.name;
+
+    const code = document.createElement('div');
+    code.className = 'student-code';
+    code.textContent = student.code;
+
+    nameCell.append(name, code);
+    row.appendChild(nameCell);
+
+    [student.gender, student.className, student.phone, student.date]
+      .forEach(value => {
+        const cell = document.createElement('td');
+        cell.textContent = value;
+        row.appendChild(cell);
+      });
+
+    const statusCell = document.createElement('td');
+    const status = document.createElement('span');
+    status.className = 'status active-status';
+    status.textContent = 'Active';
+    statusCell.appendChild(status);
+    row.appendChild(statusCell);
+
+    table.appendChild(row);
+  });
+
+  document.getElementById('totalStudents').textContent =
+    (1250 + students.length - 3).toLocaleString();
+}
+
+document.getElementById('addStudentForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const code = document.getElementById('studentCode').value.trim();
+
+  if (students.some(s => s.code === code)) {
+    alert('This student code already exists.');
+    return;
+  }
+
+  const dateValue = document.getElementById('studentDate').value;
+
+  const student = {
+    code,
+    name: document.getElementById('studentName').value.trim(),
+    gender: document.getElementById('studentGender').value,
+    className: document.getElementById('studentClass').value,
+    phone: document.getElementById('studentPhone').value.trim() || '-',
+    date: dateValue.split('-').reverse().join('/')
+  };
+
+  students.push(student);
+  renderStudents();
+
+  this.reset();
+  toggleForm(false);
+
+  alert('Student added successfully!');
+});
+
+function searchStudents() {
+  const query = document.getElementById('searchInput')
+    .value.toLowerCase().trim();
+
+  const filtered = students.filter(student =>
+    Object.values(student).some(value =>
+      String(value).toLowerCase().includes(query)
+    )
+  );
+
+  renderStudents(filtered);
+}
+</script>
+
+</body>
+</html>
